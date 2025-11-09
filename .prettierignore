@@ -1,0 +1,16 @@
+# Vercel
+.vercel
+
+.next/
+
+node_modules/
+
+# 캐시
+.turbo/
+dist/
+build/
+
+#패키지 매니저
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

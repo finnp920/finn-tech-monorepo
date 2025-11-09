@@ -1,0 +1,17 @@
+{
+  "name": "@repo/tailwind-config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "tailwind.config.cjs",
+  "license": "MIT",
+  "files": [
+    "tailwind.config.cjs",
+    "postcss.config.cjs"
+  ],
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17"
+  }
+}
