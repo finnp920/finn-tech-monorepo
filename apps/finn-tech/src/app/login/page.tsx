@@ -10,62 +10,53 @@ export default function LoginPage() {
   const supabase = createClient()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const user = useAtomValue(userAtom) // Jotai에서 사용자 정보 읽기
 
-  // Jotai 아톰에서 현재 사용자 정보를 가져옵니다.
-  const user = useAtomValue(userAtom)
+  // 'next' 파라미터 (보호된 경로에서 리디렉션된 경우)
+  const nextPath = searchParams.get('next') ?? '/'
 
-  // (개선) middleware가 리디렉션하지만, 클라이언트에서도 한 번 더 확인
+  // 이미 로그인한 사용자인지 확인 (Jotai 아톰 기반)
   useEffect(() => {
     if (user) {
-      // 'next' 파라미터가 있으면 그곳으로, 없으면 홈으로
-      const next = searchParams.get('next') ?? '/'
-      router.replace(next)
+      router.push(nextPath) // 이미 로그인했다면 원래 가려던 곳(next) 또는 홈으로
     }
-  }, [user, router, searchParams])
+  }, [user, router, nextPath])
 
   const handleGoogleLogin = async () => {
-    // 미들웨어에서 /login으로 리디렉션할 때 전달한 'next' 파라미터를 가져옵니다.
-    const next = searchParams.get('next')
-
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        // 로그인 성공 후 /auth/callback을 거쳐
-        // 최종적으로 리디렉션될 경로를 지정합니다.
-        redirectTo: `${location.origin}/auth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`,
+        redirectTo: `${location.origin}/auth/callback?next=${encodeURIComponent(nextPath)}`,
       },
     })
 
     if (error) {
       console.error('Google 로그인 오류:', error)
-      // TODO: 사용자에게 오류 메시지 표시
     }
   }
 
-  // 사용자가 이미 로드되었으면 (로그인 상태)
+  // user가 로드 중이거나 이미 로그인된 경우 (깜빡임 방지)
   if (user) {
     return <div>로그인되어 있습니다. 이동 중...</div>
   }
 
-  // (개선) 로그인 페이지 UI
   return (
-    <div className="font-inter flex min-h-screen items-center justify-center bg-gray-50">
-      <div className="w-full max-w-sm space-y-6 rounded-2xl bg-white p-8 shadow-xl">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold text-gray-900">finn-tech</h2>
-          <p className="mt-2 text-sm text-gray-600">
-            CMS에 오신 것을 환영합니다
-          </p>
-        </div>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-lg">
+        <h2 className="text-center text-2xl font-bold text-gray-900">
+          finn-tech 로그인
+        </h2>
         <button
           onClick={handleGoogleLogin}
-          className="flex w-full items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 font-semibold text-gray-700 shadow-sm transition-colors duration-150 hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+          className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 font-semibold text-gray-700 shadow-sm hover:bg-gray-100 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:outline-none"
         >
-          {/* Google SVG 아이콘 */}
+          {/* 간단한 Google SVG 아이콘 */}
           <svg
-            className="mr-3 h-5 w-5"
+            className="mr-2 inline h-5 w-5"
             aria-hidden="true"
             focusable="false"
+            data-prefix="fab"
+            data-icon="google"
             role="img"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 488 512"
