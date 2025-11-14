@@ -1,5 +1,6 @@
 import Image, { type ImageProps } from 'next/image'
 import styles from './page.module.css'
+import { Button } from '@repo/ui/button'
 
 type Props = Omit<ImageProps, 'src'> & {
   srcLight: string
@@ -21,6 +22,10 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
+        <Button variant={'destructive'} size={'lg'}>
+          Test button lg
+        </Button>
+        <Button variant={'destructive'}>Test button</Button>
         <ThemeImage
           className={styles.logo}
           srcLight="turborepo-dark.svg"
