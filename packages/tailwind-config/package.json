@@ -5,8 +5,7 @@
   "main": "tailwind.config.cjs",
   "license": "MIT",
   "files": [
-    "tailwind.config.cjs",
-    "postcss.config.cjs"
+    "tailwind.config.cjs"
   ],
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
